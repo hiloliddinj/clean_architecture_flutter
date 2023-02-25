@@ -1,0 +1,97 @@
+name: giftbow_mobile
+description: A new Flutter project.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.2 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.5
+  # State-Manager
+  flutter_bloc: ^8.1.2
+  freezed: ^2.3.2
+  freezed_annotation: ^2.2.0
+  # DI
+  get_it: ^7.2.0
+  # Remote API
+  dio: ^4.0.4
+  connectivity_plus: ^3.0.3
+  internet_connection_checker: ^1.0.0+1
+  # SVG Image
+  flutter_svg: ^2.0.1
+  # Routing
+  auto_route: ^5.0.4
+  # Local Data
+  hive_flutter: ^1.1.0
+  flutter_secure_storage: ^8.0.0
+  # Functional Programming
+  dartz: ^0.10.1
+  # Test
+  mocktail: ^0.3.0
+  http_mock_adapter: ^0.3.3
+  # Localization
+  intl: ^0.17.0
+  # Path
+  path_provider: ^2.0.12
+  # Permission Request
+  permission_handler: ^10.2.0
+  # Get Image From Device
+  file_picker: ^5.2.5
+  extended_image: ^7.0.1
+  path_drawing: ^1.0.1
+  image_editor: ^1.3.0
+  flutter_image_compress: ^1.1.3
+  # Pin code Field
+  pinput: ^2.2.23
+  # Overlay Alert
+  overlay_support: ^2.1.0
+  # Date Picker
+  scroll_date_picker: ^3.6.1
+  # Drop Down TextField
+  dropdown_textfield: ^1.0.6
+  # Loading
+  shimmer: ^2.0.0
+  loader_overlay: ^2.1.0
+  # Device Info
+  device_info_plus: ^8.1.0
+  # Logging
+  logger: ^1.1.0
+  # formaatter
+  mask_text_input_formatter: ^2.4.0
+  # keyboard_visibility
+  flutter_keyboard_visibility: ^5.4.0
+
+
+  json_serializable: ^6.6.1
+  json_annotation: ^4.8.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.1
+  auto_route_generator: ^5.0.3
+  build_runner: ^2.3.3
+
+flutter:
+  uses-material-design: true
+  generate: true
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: Bold
+      fonts:
+        - asset: assets/fonts/SFUIDisplay-Bold.ttf
+    - family: Regular
+      fonts:
+        - asset: assets/fonts/SFUIDisplay-Regular.ttf
+    - family: Semibold
+      fonts:
+        - asset: assets/fonts/SFUIDisplay-Semibold.ttf
+
