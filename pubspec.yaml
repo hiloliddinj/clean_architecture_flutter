@@ -36,6 +36,8 @@ dependencies:
   http_mock_adapter: ^0.3.3
   # Localization
   intl: ^0.17.0
+  flutter_localizations:
+    sdk: flutter
   # Path
   path_provider: ^2.0.12
   # Permission Request
