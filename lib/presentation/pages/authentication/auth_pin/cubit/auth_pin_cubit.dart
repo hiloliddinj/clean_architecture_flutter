@@ -4,11 +4,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../../../../const/global_function.dart';
 import '../../../../../domain/entities/authentication/confirm_token'
     '/confirm_token.dart';
-import '../../../../../domain/entities/authentication/token_enum'
-    '/token_enum.dart';
 import '../../../../../domain/usecases/authentication/confirm_sms_code.dart';
 import '../../../../../domain/usecases/authentication/get_confirm_token.dart';
-import '../../../../../domain/usecases/authentication/save_token_to_local.dart';
 
 part 'auth_pin_state.dart';
 part 'auth_pin_cubit.freezed.dart';
@@ -16,16 +13,14 @@ part 'auth_pin_cubit.freezed.dart';
 class AuthPinCubit extends Cubit<AuthPinState> {
   final ConfirmSmsCode confirmSmsCode;
   final GetConfirmToken getConfirmToken;
-  final SaveTokenToLocal saveTokenToLocal;
 
   int maxCheckCode = 0;
 
   AuthPinCubit({
     required this.confirmSmsCode,
     required this.getConfirmToken,
-    required this.saveTokenToLocal,
   }) : super(
-          const AuthPinState.nextButtonPressed(),
+          const AuthPinState.pinEnterCompleted(),
         );
 
   void setMaxCheckCode(
@@ -34,7 +29,7 @@ class AuthPinCubit extends Cubit<AuthPinState> {
     this.maxCheckCode = maxCheckCode;
   }
 
-  void nextButtonPressed({
+  void pinEnterCompleted({
     required String confirmCode,
     required ConfirmToken confirmToken,
   }) async {
@@ -47,19 +42,18 @@ class AuthPinCubit extends Cubit<AuthPinState> {
     final confirmCodeResponse = await confirmSmsCode(
       ConfirmSmsCodeParams(
         confirmCode: confirmCode,
-        confirmToken: confirmToken.confirmToken,
       ),
     );
 
     confirmCodeResponse.fold(
       (l) => emit(
-        AuthPinState.nextButtonPressed(
+        AuthPinState.pinEnterCompleted(
           status: AuthPinStatus.error,
           error: mapFailureToMessage(l),
         ),
       ),
       (r) => emit(
-        const AuthPinState.nextButtonPressed(
+        const AuthPinState.pinEnterCompleted(
           status: AuthPinStatus.success,
         ),
       ),
@@ -92,22 +86,15 @@ class AuthPinCubit extends Cubit<AuthPinState> {
 
     confirmToken.fold(
       (l) => emit(
-        AuthPinState.nextButtonPressed(
+        AuthPinState.pinEnterCompleted(
           status: AuthPinStatus.error,
           error: mapFailureToMessage(l),
         ),
       ),
       (r) async {
-        await saveTokenToLocal(
-          SaveTokenParams(
-            tokenType: TokenEnum.confirm,
-            token: r.confirmToken,
-          ),
-        );
         emit(
-          AuthPinState.nextButtonPressed(
+          const AuthPinState.pinEnterCompleted(
             status: AuthPinStatus.sendCodeAgainSuccess,
-            confirmToken: r,
           ),
         );
       },

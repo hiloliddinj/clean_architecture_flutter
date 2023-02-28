@@ -109,8 +109,8 @@ class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: AuthPinScreen(
           key: args.key,
-          confirmToken: args.confirmToken,
           phoneNumber: args.phoneNumber,
+          confirmToken: args.confirmToken,
         ),
       );
     },
@@ -444,15 +444,15 @@ class AuthPhoneScreenRoute extends PageRouteInfo<void> {
 class AuthPinScreenRoute extends PageRouteInfo<AuthPinScreenRouteArgs> {
   AuthPinScreenRoute({
     Key? key,
-    required ConfirmToken confirmToken,
     required String phoneNumber,
+    required ConfirmToken confirmToken,
   }) : super(
           AuthPinScreenRoute.name,
           path: 'auth_pin',
           args: AuthPinScreenRouteArgs(
             key: key,
-            confirmToken: confirmToken,
             phoneNumber: phoneNumber,
+            confirmToken: confirmToken,
           ),
         );
 
@@ -462,19 +462,19 @@ class AuthPinScreenRoute extends PageRouteInfo<AuthPinScreenRouteArgs> {
 class AuthPinScreenRouteArgs {
   const AuthPinScreenRouteArgs({
     this.key,
-    required this.confirmToken,
     required this.phoneNumber,
+    required this.confirmToken,
   });
 
   final Key? key;
 
-  final ConfirmToken confirmToken;
-
   final String phoneNumber;
+
+  final ConfirmToken confirmToken;
 
   @override
   String toString() {
-    return 'AuthPinScreenRouteArgs{key: $key, confirmToken: $confirmToken, phoneNumber: $phoneNumber}';
+    return 'AuthPinScreenRouteArgs{key: $key, phoneNumber: $phoneNumber, confirmToken: $confirmToken}';
   }
 }
 

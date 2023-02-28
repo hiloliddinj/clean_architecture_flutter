@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
+import 'package:giftbow_mobile/domain/entities/authentication/confirm_token/confirm_token.dart';
 
 import '../../../core/error/failure.dart';
 import '../../../core/usecases/usecases.dart';
-import '../../entities/authentication/confirm_token/confirm_token.dart';
 import '../../repositories/authentication/authentication_repository.dart';
 
 class GetConfirmToken implements UseCase<ConfirmToken, GetConfirmTokenParams> {

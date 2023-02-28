@@ -132,7 +132,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       return;
     } on DioError catch (e) {
       throw ServerException(
-        cause: e.response!.data['reason'],
+        cause: e.response!.data['reason']['confirmCode'],
         data: e.response!.data['responseObject'],
         code: e.response!.data['httpStatusCode'],
       );

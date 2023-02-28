@@ -52,12 +52,13 @@ class ContactsAccessScreen extends StatelessWidget {
   }
 
   Future<void> _allowContactsPermission(BuildContext context) async {
-    if (await Permission.contacts.request().isGranted) {
-      if (context.mounted) {
-        AutoRouter.of(context).push(
+    final status = await Permission.contacts.request();
+    if (status.isGranted && context.mounted) {
+      AutoRouter.of(context).replaceAll(
+        [
           ProfileScreenRoute(),
-        );
-      }
+        ],
+      );
     }
   }
 }

@@ -19,13 +19,13 @@ import '../../../navigation/router.dart';
 import 'cubit/auth_pin_cubit.dart';
 
 class AuthPinScreen extends StatefulWidget {
-  final ConfirmToken confirmToken;
   final String phoneNumber;
+  final ConfirmToken confirmToken;
 
   const AuthPinScreen({
     Key? key,
-    required this.confirmToken,
     required this.phoneNumber,
+    required this.confirmToken,
   }) : super(key: key);
 
   @override
@@ -45,7 +45,9 @@ class _AuthPinScreenState extends State<AuthPinScreen> {
   int _start = 0;
   String timerMessage = '';
   String? errorInput;
-  int _enterCodeLimit = 10;
+  String errorMessage = '';
+
+  bool enteredCodeAfterNewSms = false;
 
   void startTimer() {
     const oneSec = Duration(
@@ -57,23 +59,20 @@ class _AuthPinScreenState extends State<AuthPinScreen> {
         if (_start == 0) {
           setState(() {
             timer.cancel();
+            timerMessage = '';
+            errorInput = null;
           });
+          pinputKey.currentState!.validate();
         } else {
           setState(() {
             _start--;
             timerMessage = ' ${context.local.after} ${_formattedTime(
               timeInSecond: _start,
             )}';
-            if (_enterCodeLimit == 0) {
-              errorInput = context.local.code_enter_limit_exceeded_message +
-                  _formattedTime(
-                    timeInSecond: _start,
-                  );
-              if (_start == 0) {
-                errorInput = null;
-                timerMessage = '';
-                _enterCodeLimit = 10;
-              }
+            if (enteredCodeAfterNewSms && errorInput != null) {
+              errorInput = '$errorMessage ${_formattedTime(
+                timeInSecond: _start,
+              )}';
               pinputKey.currentState!.validate();
             }
           });
@@ -123,16 +122,7 @@ class _AuthPinScreenState extends State<AuthPinScreen> {
         isBack: true,
         actions: [
           GbTextButton(
-            onPressed: () {
-              if (pinController.text.length == 4 && !(_enterCodeLimit == 0)) {
-                context.showOverlayLoad;
-                errorInput = null;
-                authPinCubit.nextButtonPressed(
-                  confirmCode: pinController.text,
-                  confirmToken: _confirmToken!,
-                );
-              }
-            },
+            onPressed: () {},
             text: context.local.onward,
             textStyle: context.text.textButtonAppBar,
           ),
@@ -141,9 +131,8 @@ class _AuthPinScreenState extends State<AuthPinScreen> {
       body: BlocConsumer<AuthPinCubit, AuthPinState>(
         bloc: authPinCubit,
         listener: (context, state) {
-          state.when(nextButtonPressed: (
+          state.when(pinEnterCompleted: (
             status,
-            confirmToken,
             error,
           ) {
             if (status == AuthPinStatus.success) {
@@ -155,18 +144,9 @@ class _AuthPinScreenState extends State<AuthPinScreen> {
               );
             } else if (status == AuthPinStatus.error && error != null) {
               context.hideOverlayLoad;
-              _enterCodeLimit--;
-              setState(() {
-                if (_enterCodeLimit == 9) {
-                  errorInput = context.local.code_does_not_work;
-                } else if (_enterCodeLimit == 0) {
-                  errorInput = context.local.code_enter_limit_exceeded_message;
-                } else {
-                  errorInput = context.local.wrong_code_1 +
-                      _enterCodeLimit.toString() +
-                      context.local.wrong_code_2;
-                }
-              });
+              errorMessage = error;
+              errorInput = error;
+              setState(() {});
               pinputKey.currentState!.validate();
             } else if (status == AuthPinStatus.sendCodeAgainSuccess) {
               context.hideOverlayLoad;
@@ -180,8 +160,8 @@ class _AuthPinScreenState extends State<AuthPinScreen> {
                   text: context.local.code_send_success,
                 ),
               );
-              _start = confirmToken?.resendTime ?? 60;
-              _confirmToken = confirmToken;
+              _start = widget.confirmToken.resendTime;
+              _confirmToken = widget.confirmToken;
               startTimer();
             } else if (status == AuthPinStatus.maxCheckCodeFinished) {
               context.hideOverlayLoad;
@@ -219,6 +199,15 @@ class _AuthPinScreenState extends State<AuthPinScreen> {
                       validator: (value) {
                         return errorInput;
                       },
+                      onCompleted: (value) {
+                        context.showOverlayLoad;
+                        enteredCodeAfterNewSms = true;
+                        errorInput = null;
+                        authPinCubit.pinEnterCompleted(
+                          confirmCode: pinController.text,
+                          confirmToken: _confirmToken!,
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -231,8 +220,8 @@ class _AuthPinScreenState extends State<AuthPinScreen> {
                       onPressed: () {
                         if (_start == widget.confirmToken.resendTime ||
                             _start == 0) {
+                          enteredCodeAfterNewSms = false;
                           context.showOverlayLoad;
-                          _enterCodeLimit = 10;
                           authPinCubit.getCodeAgain(
                             phoneNumber: widget.phoneNumber,
                           );

@@ -2,17 +2,20 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:giftbow_mobile/presentation/pages/authentication/auth_phone/auth_phone_screen.dart';
-import 'package:giftbow_mobile/presentation/pages/authentication/personal_data_create/personal_data_create_screen.dart';
-import 'package:giftbow_mobile/presentation/pages/authentication/user_agreement/user_agreement_screen.dart';
 
 import '../../domain/entities/authentication/confirm_token/confirm_token.dart';
-import '../pages/authentication/agreement_checkbox/agreement_checkbox_screen.dart';
+import '../pages/authentication/agreement_checkbox'
+    '/agreement_checkbox_screen.dart';
+import '../pages/authentication/auth_phone/auth_phone_screen.dart';
 import '../pages/authentication/auth_pin/auth_pin_screen.dart';
 import '../pages/authentication/contacts_access/contacts_access_screen.dart';
+import '../pages/authentication/personal_data_create'
+    '/personal_data_create_screen.dart';
+import '../pages/authentication/user_agreement/user_agreement_screen.dart';
 import '../pages/profile/avatar_edit/avatar_edit_screen.dart';
 import '../pages/profile/avatar_preview/avatar_preview_screen.dart';
-import '../pages/profile/delete_account_confirmation/delete_account_confirmation_screen.dart';
+import '../pages/profile/delete_account_confirmation'
+    '/delete_account_confirmation_screen.dart';
 import '../pages/profile/email_confirmation/email_confirmation_screen.dart';
 import '../pages/profile/email_edit/email_edit_screen.dart';
 import '../pages/profile/image_permission/image_permission_screen.dart';

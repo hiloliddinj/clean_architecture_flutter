@@ -14,9 +14,7 @@ class AuthenticationRequest implements UseCase<Authentication, Params> {
 
   @override
   Future<Either<Failure, Authentication>> call(Params params) async {
-    return await repository.authenticationRequest(
-      confirmToken: params.confirmToken,
-    );
+    return await repository.authenticationRequest();
   }
 }
 

@@ -60,8 +60,8 @@ class _AuthPhoneScreenState extends State<AuthPhoneScreen> {
                 context.hideOverlayLoad;
                 AutoRouter.of(context).push(
                   AuthPinScreenRoute(
-                    confirmToken: confirmToken!,
                     phoneNumber: phoneController.text,
+                    confirmToken: confirmToken!,
                   ),
                 );
               } else if (status == AuthPhoneStatus.error && error != null) {

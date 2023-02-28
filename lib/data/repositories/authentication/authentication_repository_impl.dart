@@ -3,11 +3,8 @@ import 'package:dartz/dartz.dart';
 import '../../../core/error/exeptions.dart';
 import '../../../core/error/failure.dart';
 import '../../../core/platform/network_info.dart';
-import '../../../domain/entities/authentication/access_token/access_token.dart';
 import '../../../domain/entities/authentication/authentication'
     '/authentication.dart';
-import '../../../domain/entities/authentication/confirm_code_response'
-    '/confirm_code_response.dart';
 import '../../../domain/entities/authentication/confirm_token'
     '/confirm_token.dart';
 import '../../../domain/repositories/authentication'
@@ -38,30 +35,35 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
             await authenticationRemoteDataSource.getConfirmToken(
           phoneNumber: phoneNumber,
         );
-        return Right(confirmToken);
-      } on ServerException catch (e) {
-        return Left(ServerFailure(e.cause));
-      }
-    } else {
-      return Left(
-        InternetFailure(),
-      );
-    }
-  }
 
-  @override
-  Future<Either<Failure, ConfirmCodeResponse>> confirmSmsCode(
-      {required String confirmCode, required String confirmToken}) async {
-    if (await networkInfo.isConnected) {
-      try {
-        final confirmCodeResponse =
-            await authenticationRemoteDataSource.confirmSmsCode(
-          confirmCode: confirmCode,
-          confirmToken: confirmToken,
+        await authenticationLocalDataSource.setCacheConfirmToken(
+          confirmToken: confirmToken.confirmToken,
         );
-        return Right(confirmCodeResponse);
+
+        var authentication = await authenticationRequest();
+
+        authentication.fold(
+          (l) => null,
+          (r) async {
+            await authenticationLocalDataSource.setCacheAccessToken(
+              accessToken: r.accessToken,
+            );
+
+            await authenticationLocalDataSource.setCacheRefreshToken(
+              refreshToken: r.refreshToken,
+            );
+          },
+        );
+
+        return Right(
+          confirmToken,
+        );
       } on ServerException catch (e) {
-        return Left(ServerFailure(e.cause));
+        return Left(
+          ServerFailure(
+            e.cause,
+          ),
+        );
       }
     } else {
       return Left(
@@ -71,17 +73,49 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   }
 
   @override
-  Future<Either<Failure, Authentication>> authenticationRequest(
-      {required String confirmToken}) async {
+  Future<Either<Failure, void>> confirmSmsCode({
+    required String confirmCode,
+  }) async {
     if (await networkInfo.isConnected) {
       try {
+        await authenticationRemoteDataSource.confirmSmsCode(
+          confirmCode: confirmCode,
+        );
+        return const Right(null);
+      } on ServerException catch (e) {
+        return Left(
+          ServerFailure(
+            e.cause,
+          ),
+        );
+      }
+    } else {
+      return Left(
+        InternetFailure(),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Authentication>> authenticationRequest() async {
+    if (await networkInfo.isConnected) {
+      try {
+        String confirmToken =
+            await authenticationLocalDataSource.getConfirmTokenFromCache();
+
         final authentication =
             await authenticationRemoteDataSource.authenticationRequest(
           confirmToken: confirmToken,
         );
-        return Right(authentication);
+        return Right(
+          authentication,
+        );
       } on ServerException catch (e) {
-        return Left(ServerFailure(e.cause));
+        return Left(
+          ServerFailure(
+            e.cause,
+          ),
+        );
       }
     } else {
       return Left(
@@ -91,107 +125,32 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   }
 
   @override
-  Future<Either<Failure, AccessToken>> getAccessToken(
-      {required String refreshToken}) async {
+  Future<Either<Failure, void>> getAccessToken() async {
     if (await networkInfo.isConnected) {
       try {
+        String refreshToken =
+            await authenticationLocalDataSource.getRefreshTokenFromCache();
+
         final accessToken = await authenticationRemoteDataSource.getAccessToken(
           refreshToken: refreshToken,
         );
-        return Right(accessToken);
+        await authenticationLocalDataSource.setCacheAccessToken(
+          accessToken: accessToken,
+        );
+
+        return const Right(
+          null,
+        );
       } on ServerException catch (e) {
-        return Left(ServerFailure(e.cause));
+        return Left(
+          ServerFailure(
+            e.cause,
+          ),
+        );
       }
     } else {
       return Left(
         InternetFailure(),
-      );
-    }
-  }
-
-  @override
-  Future<Either<Failure, String>> getLocalAccessToken() async {
-    try {
-      final accessToken =
-          await authenticationLocalDataSource.getAccessTokenFromCache();
-      return Right(accessToken);
-    } on SecureStorageException {
-      return Left(
-        SecureStorageFailure(),
-      );
-    }
-  }
-
-  @override
-  Future<Either<Failure, String>> getLocalConfirmToken() async {
-    try {
-      final confirmToken =
-          await authenticationLocalDataSource.getConfirmTokenFromCache();
-      return Right(confirmToken);
-    } on SecureStorageException {
-      return Left(
-        SecureStorageFailure(),
-      );
-    }
-  }
-
-  @override
-  Future<Either<Failure, String>> getLocalRefreshToken() async {
-    try {
-      final refreshToken =
-          await authenticationLocalDataSource.getRefreshTokenFromCache();
-      return Right(refreshToken);
-    } on SecureStorageException {
-      return Left(
-        SecureStorageFailure(),
-      );
-    }
-  }
-
-  @override
-  Future<Either<Failure, void>> setLocalAccessToken({
-    required String accessToken,
-  }) async {
-    try {
-      await authenticationLocalDataSource.setCacheAccessToken(
-        accessToken: accessToken,
-      );
-      return const Right(null);
-    } on Exception {
-      return Left(
-        SecureStorageFailure(),
-      );
-    }
-  }
-
-  @override
-  Future<Either<Failure, void>> setLocalConfirmToken({
-    required String confirmToken,
-  }) async {
-    try {
-      await authenticationLocalDataSource.setCacheConfirmToken(
-        confirmToken: confirmToken,
-      );
-      return const Right(null);
-    } on Exception {
-      return Left(
-        SecureStorageFailure(),
-      );
-    }
-  }
-
-  @override
-  Future<Either<Failure, void>> setLocalRefreshToken({
-    required String refreshToken,
-  }) async {
-    try {
-      await authenticationLocalDataSource.setCacheRefreshToken(
-        refreshToken: refreshToken,
-      );
-      return const Right(null);
-    } on Exception {
-      return Left(
-        SecureStorageFailure(),
       );
     }
   }

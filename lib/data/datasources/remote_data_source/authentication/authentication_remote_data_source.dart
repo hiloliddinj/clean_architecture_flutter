@@ -2,27 +2,26 @@ import 'package:dio/dio.dart';
 
 import '../../../../core/error/exeptions.dart';
 import '../../../../core/http_client/http_client.dart';
-import '../../../models/authentication/access_token/access_token_model.dart';
-import '../../../models/authentication/authentication/authentication_model.dart';
-import '../../../models/authentication/confirm_code_response'
-    '/confirm_code_response_model.dart';
+import '../../../models/authentication/authentication'
+    '/authentication_model.dart';
 import '../../../models/authentication/confirm_token/confirm_token_model.dart';
+import '../../local_data_source/authentication'
+    '/authentication_local_data_source.dart';
 
 abstract class AuthenticationRemoteDataSource {
   Future<ConfirmTokenModel> getConfirmToken({
     required String phoneNumber,
   });
 
-  Future<ConfirmCodeResponseModel> confirmSmsCode({
+  Future<void> confirmSmsCode({
     required String confirmCode,
-    required String confirmToken,
   });
 
   Future<AuthenticationModel> authenticationRequest({
     required String confirmToken,
   });
 
-  Future<AccessTokenModel> getAccessToken({
+  Future<String> getAccessToken({
     required String refreshToken,
   });
 }
@@ -30,9 +29,11 @@ abstract class AuthenticationRemoteDataSource {
 class AuthenticationRemoteDataSourceImp
     implements AuthenticationRemoteDataSource {
   final HttpClient client;
+  final AuthenticationLocalDataSource authenticationLocalDataSource;
 
   AuthenticationRemoteDataSourceImp({
     required this.client,
+    required this.authenticationLocalDataSource,
   });
 
   @override
@@ -48,7 +49,9 @@ class AuthenticationRemoteDataSourceImp
           },
         ),
       );
-      return ConfirmTokenModel.fromJson(response.data['responseObject']);
+      return ConfirmTokenModel.fromJson(
+        response.data['responseObject'],
+      );
     } on DioError catch (e) {
       throw ServerException(
         cause: e.message,
@@ -57,12 +60,13 @@ class AuthenticationRemoteDataSourceImp
   }
 
   @override
-  Future<ConfirmCodeResponseModel> confirmSmsCode({
+  Future<void> confirmSmsCode({
     required String confirmCode,
-    required String confirmToken,
   }) async {
     try {
-      var response = await client.put(
+      String confirmToken =
+          await authenticationLocalDataSource.getConfirmTokenFromCache();
+      await client.put(
         '/v1/auth/confirm/$confirmToken',
         data: FormData.fromMap(
           {
@@ -70,10 +74,12 @@ class AuthenticationRemoteDataSourceImp
           },
         ),
       );
-      return ConfirmCodeResponseModel.fromJson(response.data);
+      return;
     } on DioError catch (e) {
       throw ServerException(
-        cause: e.message,
+        cause: e.response!.data['reason']['confirmCode'],
+        data: e.response!.data['responseObject'],
+        code: e.response!.data['httpStatusCode'],
       );
     }
   }
@@ -89,7 +95,9 @@ class AuthenticationRemoteDataSourceImp
           'confirmToken': confirmToken,
         },
       );
-      return AuthenticationModel.fromJson(response.data['responseObject']);
+      return AuthenticationModel.fromJson(
+        response.data['responseObject'],
+      );
     } on DioError catch (e) {
       throw ServerException(
         cause: e.message,
@@ -98,7 +106,7 @@ class AuthenticationRemoteDataSourceImp
   }
 
   @override
-  Future<AccessTokenModel> getAccessToken({
+  Future<String> getAccessToken({
     required String refreshToken,
   }) async {
     try {
@@ -108,7 +116,7 @@ class AuthenticationRemoteDataSourceImp
           'refreshToken': refreshToken,
         },
       );
-      return AccessTokenModel.fromJson(response.data['responseObject']);
+      return response.data['responseObject']['accessToken'];
     } on DioError catch (e) {
       throw ServerException(
         cause: e.message,

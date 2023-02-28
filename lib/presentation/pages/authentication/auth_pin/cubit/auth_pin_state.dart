@@ -11,9 +11,8 @@ enum AuthPinStatus {
 
 @freezed
 class AuthPinState with _$AuthPinState {
-  const factory AuthPinState.nextButtonPressed({
+  const factory AuthPinState.pinEnterCompleted({
     @Default(AuthPinStatus.init) AuthPinStatus status,
-    ConfirmToken? confirmToken,
     String? error,
   }) = _AuthPinState;
 }

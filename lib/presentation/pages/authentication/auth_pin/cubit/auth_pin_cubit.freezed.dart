@@ -17,43 +17,37 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$AuthPinState {
   AuthPinStatus get status => throw _privateConstructorUsedError;
-  ConfirmToken? get confirmToken => throw _privateConstructorUsedError;
   String? get error => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            AuthPinStatus status, ConfirmToken? confirmToken, String? error)
-        nextButtonPressed,
+    required TResult Function(AuthPinStatus status, String? error)
+        pinEnterCompleted,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            AuthPinStatus status, ConfirmToken? confirmToken, String? error)?
-        nextButtonPressed,
+    TResult? Function(AuthPinStatus status, String? error)? pinEnterCompleted,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            AuthPinStatus status, ConfirmToken? confirmToken, String? error)?
-        nextButtonPressed,
+    TResult Function(AuthPinStatus status, String? error)? pinEnterCompleted,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_AuthPinState value) nextButtonPressed,
+    required TResult Function(_AuthPinState value) pinEnterCompleted,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_AuthPinState value)? nextButtonPressed,
+    TResult? Function(_AuthPinState value)? pinEnterCompleted,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_AuthPinState value)? nextButtonPressed,
+    TResult Function(_AuthPinState value)? pinEnterCompleted,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -69,7 +63,7 @@ abstract class $AuthPinStateCopyWith<$Res> {
           AuthPinState value, $Res Function(AuthPinState) then) =
       _$AuthPinStateCopyWithImpl<$Res, AuthPinState>;
   @useResult
-  $Res call({AuthPinStatus status, ConfirmToken? confirmToken, String? error});
+  $Res call({AuthPinStatus status, String? error});
 }
 
 /// @nodoc
@@ -86,7 +80,6 @@ class _$AuthPinStateCopyWithImpl<$Res, $Val extends AuthPinState>
   @override
   $Res call({
     Object? status = null,
-    Object? confirmToken = freezed,
     Object? error = freezed,
   }) {
     return _then(_value.copyWith(
@@ -94,10 +87,6 @@ class _$AuthPinStateCopyWithImpl<$Res, $Val extends AuthPinState>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as AuthPinStatus,
-      confirmToken: freezed == confirmToken
-          ? _value.confirmToken
-          : confirmToken // ignore: cast_nullable_to_non_nullable
-              as ConfirmToken?,
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -114,7 +103,7 @@ abstract class _$$_AuthPinStateCopyWith<$Res>
       __$$_AuthPinStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({AuthPinStatus status, ConfirmToken? confirmToken, String? error});
+  $Res call({AuthPinStatus status, String? error});
 }
 
 /// @nodoc
@@ -129,7 +118,6 @@ class __$$_AuthPinStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? status = null,
-    Object? confirmToken = freezed,
     Object? error = freezed,
   }) {
     return _then(_$_AuthPinState(
@@ -137,10 +125,6 @@ class __$$_AuthPinStateCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as AuthPinStatus,
-      confirmToken: freezed == confirmToken
-          ? _value.confirmToken
-          : confirmToken // ignore: cast_nullable_to_non_nullable
-              as ConfirmToken?,
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -152,20 +136,17 @@ class __$$_AuthPinStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_AuthPinState implements _AuthPinState {
-  const _$_AuthPinState(
-      {this.status = AuthPinStatus.init, this.confirmToken, this.error});
+  const _$_AuthPinState({this.status = AuthPinStatus.init, this.error});
 
   @override
   @JsonKey()
   final AuthPinStatus status;
   @override
-  final ConfirmToken? confirmToken;
-  @override
   final String? error;
 
   @override
   String toString() {
-    return 'AuthPinState.nextButtonPressed(status: $status, confirmToken: $confirmToken, error: $error)';
+    return 'AuthPinState.pinEnterCompleted(status: $status, error: $error)';
   }
 
   @override
@@ -174,13 +155,11 @@ class _$_AuthPinState implements _AuthPinState {
         (other.runtimeType == runtimeType &&
             other is _$_AuthPinState &&
             (identical(other.status, status) || other.status == status) &&
-            (identical(other.confirmToken, confirmToken) ||
-                other.confirmToken == confirmToken) &&
             (identical(other.error, error) || other.error == error));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, status, confirmToken, error);
+  int get hashCode => Object.hash(runtimeType, status, error);
 
   @JsonKey(ignore: true)
   @override
@@ -191,33 +170,28 @@ class _$_AuthPinState implements _AuthPinState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            AuthPinStatus status, ConfirmToken? confirmToken, String? error)
-        nextButtonPressed,
+    required TResult Function(AuthPinStatus status, String? error)
+        pinEnterCompleted,
   }) {
-    return nextButtonPressed(status, confirmToken, error);
+    return pinEnterCompleted(status, error);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(
-            AuthPinStatus status, ConfirmToken? confirmToken, String? error)?
-        nextButtonPressed,
+    TResult? Function(AuthPinStatus status, String? error)? pinEnterCompleted,
   }) {
-    return nextButtonPressed?.call(status, confirmToken, error);
+    return pinEnterCompleted?.call(status, error);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(
-            AuthPinStatus status, ConfirmToken? confirmToken, String? error)?
-        nextButtonPressed,
+    TResult Function(AuthPinStatus status, String? error)? pinEnterCompleted,
     required TResult orElse(),
   }) {
-    if (nextButtonPressed != null) {
-      return nextButtonPressed(status, confirmToken, error);
+    if (pinEnterCompleted != null) {
+      return pinEnterCompleted(status, error);
     }
     return orElse();
   }
@@ -225,27 +199,27 @@ class _$_AuthPinState implements _AuthPinState {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_AuthPinState value) nextButtonPressed,
+    required TResult Function(_AuthPinState value) pinEnterCompleted,
   }) {
-    return nextButtonPressed(this);
+    return pinEnterCompleted(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_AuthPinState value)? nextButtonPressed,
+    TResult? Function(_AuthPinState value)? pinEnterCompleted,
   }) {
-    return nextButtonPressed?.call(this);
+    return pinEnterCompleted?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_AuthPinState value)? nextButtonPressed,
+    TResult Function(_AuthPinState value)? pinEnterCompleted,
     required TResult orElse(),
   }) {
-    if (nextButtonPressed != null) {
-      return nextButtonPressed(this);
+    if (pinEnterCompleted != null) {
+      return pinEnterCompleted(this);
     }
     return orElse();
   }
@@ -253,14 +227,10 @@ class _$_AuthPinState implements _AuthPinState {
 
 abstract class _AuthPinState implements AuthPinState {
   const factory _AuthPinState(
-      {final AuthPinStatus status,
-      final ConfirmToken? confirmToken,
-      final String? error}) = _$_AuthPinState;
+      {final AuthPinStatus status, final String? error}) = _$_AuthPinState;
 
   @override
   AuthPinStatus get status;
-  @override
-  ConfirmToken? get confirmToken;
   @override
   String? get error;
   @override
