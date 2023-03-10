@@ -1,5 +1,11 @@
 # clean architecture example project
 
+Architecture: Clean Architecture
+State Management: Bloc
+Routing: auto_route
+Localiztion: flutter_localizations
+
+
 
 
 ## App preview:
