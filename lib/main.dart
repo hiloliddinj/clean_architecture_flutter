@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:giftbow_mobile/core/service_locator.dart';
-import 'package:giftbow_mobile/presentation/navigation/router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'const/styles/theme.dart';
+import 'core/service_locator.dart';
 import 'l10n/all_locales.dart';
+import 'presentation/navigation/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
