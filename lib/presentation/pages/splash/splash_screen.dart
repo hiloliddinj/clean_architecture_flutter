@@ -30,14 +30,14 @@ class _SplashScreenState extends State<SplashScreen> {
         children: const [
           Expanded(
             child: Center(
-              child: Text('Название'),
+              child: Text('Logo'),
             ),
           ),
           Padding(
             padding: EdgeInsets.only(
               bottom: 30,
             ),
-            child: Text('Какой-то лозунг'),
+            child: Text('Some Slogan'),
           )
         ],
       ),

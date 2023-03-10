@@ -4,6 +4,6 @@ class AllLocale{
   AllLocale();
 
   static final all = [
-    const Locale('ru', ''),
+    const Locale('en', 'ru'),
   ];
 }
