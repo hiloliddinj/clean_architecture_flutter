@@ -5,6 +5,12 @@ State Management: Bloc
 Routing: auto_route
 Localiztion: flutter_localizations
 
+RUN this if 1st time loading:
+
+flutter gen-l10n
+
+flutter packages pub run build_runner build --delete-conflicting-outputs
+
 
 
 
